@@ -1,6 +1,7 @@
 import os
 from PyPDF2 import PdfWriter, PdfReader
 
+
 def merge_pdfs_in_folder(folder_path, output_folder, output_filename):
     writer = PdfWriter()
 
@@ -17,9 +18,10 @@ def merge_pdfs_in_folder(folder_path, output_folder, output_filename):
     with open(output_path, 'wb') as output_file:
         writer.write(output_file)
 
+
 # Example usage
-folder_path = 'I:/elestator/GPT-/Data'  # Replace this with the path to your folder containing PDF files
-output_folder = 'I:/elestator/GPT-/Data_update'  # Replace this with the path to your output folder
+folder_path = r'I:/elestator/GPT-/AI_Chatbot_Development/Data'  # Replace this with the path to your folder containing PDF files
+output_folder = r'I:/elestator/GPT-/AI_Chatbot_Development/Data_update'  # Replace this with the path to your output folder
 output_filename = 'merged_file.pdf'  # Output filename for the merged PDF
 
 merge_pdfs_in_folder(folder_path, output_folder, output_filename)

@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    {% load static%}
+    {%include 'style.html'%}
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"
+          integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA=="
+          crossorigin="anonymous" referrerpolicy="no-referrer"/>
+    <title>ChatGPT Clone</title>
+</head>
+<body>
+<nav id="sidebar">
+    <div class="float-top">
+        <div class="sidebar-controls">
+            <button class="new-chat"><i class="fa fa-plus"></i> New chat</button>
+            <button class="hide-sidebar"><i class="fa fa-chevron-left"></i></button>
+        </div>
+        <ul class="conversations">
+
+            <li class="active">
+                <button class="conversation-button"><i class="fa fa-message fa-regular"></i> This is a conversation
+                    title
+                </button>
+                <div class="fade"></div>
+                <div class="edit-buttons">
+                    <button><i class="fa fa-edit"></i></button>
+                    <button><i class="fa fa-trash"></i></button>
+                </div>
+            </li>
+        </ul>
+    </div>
+    <div class="user-menu">
+        <a href="https://github.com/ovibaridar">
+            <button>
+                <i class="user-icon">Git</i>Al Arman Ovi
+            </button>
+        </a>
+
+
+    </div>
+</nav>
+<main>
+    <div class="view new-chat-view">
+        <div class="model-selector">
+            <div class="logo">
+                Your Chat
+            </div>
+        </div>
+
+
+    </div>
+
+    <div class="view conversation-view">
+        <div class="model-name">
+            <i class="fa fa-bolt"></i> You Chat
+        </div>
+        <div class="user message">
+            <div class="identity">
+                <i class="user-icon">u</i>
+            </div>
+            <div class="content">
+                <p>Hello, how are you?</p>
+            </div>
+        </div>
+        <div class="assistant message">
+            <div class="identity">
+                <i class="gpt user-icon">B</i>
+            </div>
+            <div class="content">
+                <p>I'm doing well, thank you!</p>
+            </div>
+        </div>
+    </div>
+
+    <div id="message-form">
+        <form action="chat_bot" method="post" class="message-wrapper">
+            {% csrf_token %}
+            <textarea id="message" name="message" rows="1" placeholder="Send a message"></textarea>
+            <button type="submit" class="send-button"><i class="fa fa-paper-plane"></i></button>
+        </form>
+
+        <div class="disclaimer ">This is a ChatGPT UI Clone for personal use and educational purposes only.</div>
+    </div>
+</main>
+{%include 'script.html'%}
+<script>
+  const messagesList = document.querySelector('.messages-list');
+  const messageForm = document.querySelector('.message-wrapper');
+  const messageInput = document.querySelector('.message-input');
+
+  messageForm.addEventListener('submit', (event) => {
+    event.preventDefault();
+
+    const message = messageInput.value.trim();
+    if (message.length === 0) {
+      return;
+    }
+
+    const messageItem = document.createElement('li');
+    messageItem.classList.add('message', 'sent');
+    messageItem.innerHTML = `
+        <div class="message-text">
+            <div class="message-sender">
+                <b>You</b>
+            </div>
+            <div class="message-content">
+                ${message}
+            </div>
+        </div>`;
+    messagesList.appendChild(messageItem);
+
+    messageInput.value = '';
+
+    fetch('', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+      body: new URLSearchParams({
+        'csrfmiddlewaretoken': document.querySelector('[name=csrfmiddlewaretoken]').value,
+        'message': message
+      })
+    })
+      .then(response => response.json())
+      .then(data => {
+        const response = data.response;
+        const messageItem = document.createElement('li');
+        messageItem.classList.add('message', 'received');
+        messageItem.innerHTML = `
+        <div class="message-text">
+            <div class="message-sender">
+              <b>AI Chatbot</b>
+            </div>
+            <div class="message-content">
+                ${response}
+            </div>
+        </div>
+          `;
+        messagesList.appendChild(messageItem);
+      });
+  });
+
+</script>
+</body>
+</html>

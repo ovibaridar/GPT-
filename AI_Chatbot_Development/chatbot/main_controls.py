@@ -5,14 +5,20 @@ from langchain_community.document_loaders import PyPDFLoader
 from langchain.text_splitter import RecursiveCharacterTextSplitter
 from langchain_community.embeddings.openai import OpenAIEmbeddings
 from langchain_community.vectorstores.faiss import FAISS
-from langchain.chains.question_answering import load_qa_chain
-from langchain_community.llms import OpenAI
 
 import Api_key
 
 os.environ["OPENAI_API_KEY"] = Api_key.API_KEY
 
-loader = PyPDFLoader("Data_update/merged_file.pdf")
+# Debugging: Print current working directory
+
+# Construct absolute path
+file_path = r'I:/elestator/GPT-/AI_Chatbot_Development/Data_update/merged_file.pdf'
+# absolute_path = os.path.abspath(file_path)
+
+loader = PyPDFLoader(file_path)
+
+# Load and split pages
 pages = loader.load_and_split()
 
 # SKIP TO STEP 2 IF YOU'RE USING THIS METHOD
@@ -22,13 +28,13 @@ chunks = pages
 
 # Step 1: Convert PDF to text
 
-doc = textract.process("Data_update/merged_file.pdf")
+doc = textract.process(file_path)
 
 # Step 2: Save to .txt and reopen (helps prevent issues)
-with open('attention_is_all_you_need.txt', 'w', encoding='utf-8') as f:
+with open('../../attention_is_all_you_need.txt', 'w', encoding='utf-8') as f:
     f.write(doc.decode('utf-8'))
 
-with open('attention_is_all_you_need.txt', 'r') as f:
+with open('../../attention_is_all_you_need.txt', 'r') as f:
     text = f.read()
 
 # Step 3: Create function to count tokens
